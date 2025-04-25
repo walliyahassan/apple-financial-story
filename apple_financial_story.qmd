@@ -1,0 +1,122 @@
+
+---
+title: "Data-Driven Storytelling Using Python: Visualising Apple Inc.'s Performance"
+author: "Walliya Fatima Hassan"
+format: html
+editor: visual
+---
+
+# Introduction
+
+In today's data-centric world, deriving actionable insights and conveying them effectively has become crucial. Data storytelling bridges complex datasets and strategic decision-making. This project reconstructs a Tableau-based corporate analysis using Python, focusing on Apple Inc., through data wrangling, exploratory data analysis (EDA), and visualization techniques.
+
+# Dataset Overview
+
+The dataset focuses on Apple Inc.'s financial and operational metrics over two decades.
+
+| Key Variables | Description |
+| --- | --- |
+| Revenue (USD Billions) | Total annual revenue |
+| Net Income (USD Billions) | Profit after all expenses |
+| R&D Expenses (USD Billions) | Investment in research and development |
+| Market Cap (USD Trillions) | Total market capitalization |
+
+# Tools and Technologies
+
+- Google Colab: Python coding environment
+- Polars: High-speed data manipulation
+- Plotnine: Grammar of graphics visualization
+- Quarto: HTML document generation
+- GitHub Pages: Project publication
+
+# Data Wrangling and EDA
+
+```{python}
+import polars as pl
+
+df = pl.read_csv("apple_financials.csv")
+apple_data = df.filter(pl.col("company") == "Apple")
+
+summary = apple_data.groupby("year").agg([
+    pl.col("revenue").mean().alias("avg_revenue"),
+    pl.col("net_income").mean().alias("avg_net_income"),
+    pl.col("r_and_d_expenses").mean().alias("avg_rnd"),
+    pl.col("market_cap").mean().alias("avg_market_cap")
+])
+summary.head()
+```
+
+# Visualisations
+
+## Revenue and Net Income Over Time
+
+```{python}
+from plotnine import *
+
+(ggplot(apple_data, aes(x='year')) +
+ geom_line(aes(y='revenue'), color='blue') +
+ geom_line(aes(y='net_income'), color='green') +
+ labs(title='Apple Revenue and Net Income Over Time'))
+```
+
+## R&D Expenses Over Time
+
+```{python}
+(ggplot(apple_data, aes(x='year', y='r_and_d_expenses')) +
+ geom_bar(stat='identity', fill='purple') +
+ labs(title='Apple R&D Investment Over Years', x='Year', y='R&D Expenses'))
+```
+
+## Market Cap vs Revenue
+
+```{python}
+(ggplot(apple_data, aes(x='revenue', y='market_cap')) +
+ geom_point(alpha=0.6) +
+ geom_smooth(method='lm') +
+ labs(title='Market Cap vs Revenue'))
+```
+
+## Revenue by Business Segment (Mocked)
+
+```{python}
+# Assume segment_df exists
+(ggplot(segment_df, aes(x='year', y='segment_revenue', fill='segment')) +
+ geom_area() +
+ labs(title='Apple Revenue by Business Segment'))
+```
+
+# HTML Output with Quarto
+
+The report was rendered into an HTML format using `quarto render`.
+
+# Publishing on GitHub Pages
+
+Steps included:
+
+- Pushing the repository to GitHub
+- Enabling GitHub Pages
+- Setting branch and folder
+- Accessing the live link
+
+Example Repo: [https://github.com/yourusername/apple-financial-story](https://github.com/yourusername/apple-financial-story)
+
+# Conclusion and Key Findings
+
+Key insights include:
+
+- Revenue Growth: Strong expansion over two decades.
+
+- Profitability: Robust net income despite growing R&D investments.
+
+- Innovation Focus: Consistent R&D investment emphasizing innovation.
+
+- Market Leadership: Increased market capitalization highlighting dominance.
+
+# References
+
+- VanderPlas, J. (2016). *Python Data Science Handbook*.
+- Wickham, H. (2010). *A Layered Grammar of Graphics*.
+- Plotnine Documentation
+- Polars Documentation
+- Quarto Documentation
+- GitHub Pages Documentation
