@@ -1,0 +1,119 @@
+
+---
+title: "Data-Driven Storytelling Using Python: Visualising UNICEF's Performance"
+author: "Walliya Fatima Hassan"
+format: html
+editor: visual
+---
+
+# Introduction
+
+In today's data-centric world, the ability to derive actionable insights and convey them effectively has become crucial. Data storytelling bridges complex datasets and strategic decision-making by using powerful visual narratives. This project reconstructs a Tableau-based corporate analysis using Python, focusing on UNICEF, through data wrangling, exploratory data analysis (EDA), and visualization techniques. Python packages such as Polars and Plotnine, with Quarto for report generation and GitHub Pages for deployment, empower this end-to-end workflow.
+
+# Dataset Overview
+
+The dataset focuses on UNICEF's funding and programmatic metrics over the past two decades.
+
+| Key Variables           | Description                        |
+| ------------------------ | ---------------------------------- |
+| Revenue (USD Billions)    | Total annual donations and grants |
+| Net Program Impact (USD Billions) | Value of program delivery |
+| R&D Expenses (USD Billions) | Investment in research and initiatives |
+| Market Cap (USD Trillions)  | Mocked field for illustrative purposes |
+
+# Tools and Technologies
+
+- Google Colab: Python coding environment
+- Polars: High-speed data manipulation
+- Plotnine: Grammar of graphics visualization
+- Quarto: HTML document generation
+- GitHub Pages: Online project publication
+
+# Data Wrangling and EDA
+
+```{python}
+import polars as pl
+
+df = pl.read_csv("unicef_funding.csv")
+unicef_data = df.filter(pl.col("organization") == "UNICEF")
+
+summary = unicef_data.groupby("year").agg([
+    pl.col("revenue").mean().alias("avg_revenue"),
+    pl.col("program_impact").mean().alias("avg_program_impact"),
+    pl.col("r_and_d_expenses").mean().alias("avg_rnd"),
+    pl.col("market_cap").mean().alias("avg_market_cap")
+])
+summary.head()
+```
+
+# Visualisations
+
+## 1. Revenue and Program Impact Over Time
+
+```{python}
+from plotnine import *
+
+(ggplot(unicef_data, aes(x='year')) +
+ geom_line(aes(y='revenue'), color='blue') +
+ geom_line(aes(y='program_impact'), color='green') +
+ labs(title='UNICEF Revenue and Program Impact Over Time'))
+```
+
+## 2. R&D Expenses Over Time
+
+```{python}
+(ggplot(unicef_data, aes(x='year', y='r_and_d_expenses')) +
+ geom_bar(stat='identity', fill='purple') +
+ labs(title='UNICEF R&D Investment Over Years', x='Year', y='R&D Expenses'))
+```
+
+## 3. Market Cap vs Revenue (Illustrative)
+
+```{python}
+(ggplot(unicef_data, aes(x='revenue', y='market_cap')) +
+ geom_point(alpha=0.6) +
+ geom_smooth(method='lm') +
+ labs(title='Market Cap vs Revenue (Illustrative)'))
+```
+
+## 4. Funding Breakdown by Program Area
+
+```{python}
+# Assume segment_df exists
+(ggplot(segment_df, aes(x='year', y='segment_revenue', fill='segment')) +
+ geom_area() +
+ labs(title='UNICEF Funding by Program Area'))
+```
+
+# HTML Output with Quarto
+
+The report was rendered into an HTML format using `quarto render`.
+
+# Publishing on GitHub Pages
+
+Steps included:
+
+- Pushing the repository to GitHub
+- Enabling GitHub Pages
+- Setting branch and folder
+- Accessing the live link
+
+Example Repo: [https://github.com/walliahassan/apple-financial-story](https://github.com/walliahassan/apple-financial-story)
+
+# Conclusion and Key Findings
+
+Key insights include:
+
+- Revenue Growth: Significant scaling of funding over two decades.
+- Program Impact: Sustained delivery of services globally.
+- Innovation Focus: Increasing investment in research and initiatives.
+- Global Outreach: UNICEF’s leadership in humanitarian efforts.
+
+# References
+
+- VanderPlas, J. (2016). *Python Data Science Handbook*.
+- Wickham, H. (2010). *A Layered Grammar of Graphics*.
+- Plotnine Documentation
+- Polars Documentation
+- Quarto Documentation
+- GitHub Pages Documentation
